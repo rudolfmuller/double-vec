@@ -39,6 +39,13 @@ impl<T: Default + Clone> DubleVec<T> {
         }
     }
 
+    pub fn set(&mut self, item: T, index: Index) {
+        let idx = self.map(index);
+        if idx < self.vector.len() {
+            self.vector[idx] = item;
+        }
+    }
+
     pub fn reverse(&mut self) {
         self.vector.reverse();
     }
@@ -59,7 +66,7 @@ impl<T: Default + Clone> DubleVec<T> {
         self.vector.is_empty()
     }
 
-    pub fn len(&self) -> usize {
+    pub fn size(&self) -> usize {
         self.vector.len()
     }
 }
@@ -118,7 +125,7 @@ mod tests {
             println!("No value at this index");
         }
 
-        println!("{}", vec.len());
+        println!("{}", vec.size());
         vec.print();
     }
 }
