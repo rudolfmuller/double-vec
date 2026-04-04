@@ -1,25 +1,20 @@
-/// The `Index` is a structure composed of variables of type `usize` named `x` and `y`
+/// Struct 'Vec2' of fields `usize`s
 #[derive(Debug, Default, Clone)]
-pub struct Index {
+pub struct Vec2 {
     pub x: usize,
     pub y: usize,
 }
-/// The `Size` is a structure composed of variables of type `usize` named `w` and `h`
-#[derive(Debug, Default, Clone)]
-pub struct Size {
-    pub w: usize,
-    pub h: usize,
-}
+
 /// Fixed 2D vector
 #[derive(Debug, Default, Clone)]
 pub struct DubleVec<T> {
-    scale: Size,
+    scale: Vec2,
     vector: Vec<T>,
 }
 impl<T: Clone + PartialEq> DubleVec<T> {
     /// Creates a new `DubleVec`
-    pub fn new(scale: Size, fill: T) -> Self {
-        let vector = vec![fill.clone(); scale.w * scale.h];
+    pub fn new(scale: Vec2, fill: T) -> Self {
+        let vector = vec![fill.clone(); scale.x * scale.y];
         Self { scale, vector }
     }
     /// Get clone of raw vector`Vec<T>`
@@ -30,23 +25,23 @@ impl<T: Clone + PartialEq> DubleVec<T> {
         &self.vector
     }
     /// Get mutable item`T` on `index` as `Option<&mut T>`
-    pub fn access_mut(&mut self, index: Index) -> Option<&mut T> {
-        if index.x < self.scale.w && index.y < self.scale.h {
-            Some(&mut self.vector[index.y * self.scale.w + index.x])
+    pub fn access_mut(&mut self, index: Vec2) -> Option<&mut T> {
+        if index.x < self.scale.x && index.y < self.scale.y {
+            Some(&mut self.vector[index.y * self.scale.x + index.x])
         } else {
             None
         }
     }
     /// Get item`T` on `index` as `Option<&T>`
-    pub fn access(&self, index: Index) -> Option<&T> {
-        if index.x < self.scale.w && index.y < self.scale.h {
-            Some(&self.vector[index.y * self.scale.w + index.x])
+    pub fn access(&self, index: Vec2) -> Option<&T> {
+        if index.x < self.scale.x && index.y < self.scale.y {
+            Some(&self.vector[index.y * self.scale.x + index.x])
         } else {
             None
         }
     }
     /// Set item`T` on `index`
-    pub fn assign(&mut self, item: T, index: Index) {
+    pub fn assign(&mut self, item: T, index: Vec2) {
         if let Some(idx) = self.access_mut(index) {
             *idx = item;
         }
@@ -95,10 +90,10 @@ impl<'a, T> IntoIterator for &'a mut DubleVec<T> {
 impl<T: std::fmt::Display> DubleVec<T> {
     /// Print a formatted vector
     pub fn print(&self) {
-        for y in 0..self.scale.h {
-            for x in 0..self.scale.w {
-                let index = Index { y, x };
-                let idx = index.y * self.scale.w + index.x;
+        for y in 0..self.scale.y {
+            for x in 0..self.scale.x {
+                let index = Vec2 { y, x };
+                let idx = index.y * self.scale.x + index.x;
                 print!("{}", self.vector[idx]);
             }
             println!();
@@ -112,9 +107,9 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let mut vec: DubleVec<i32> = DubleVec::new(Size { w: 6, h: 5 }, 0);
-        vec.assign(5, Index { x: 1, y: 1 }); // 5
-        if let Some(value) = vec.access(Index { x: 1, y: 1 }) {
+        let mut vec: DubleVec<i32> = DubleVec::new(Vec2 { x: 6, y: 5 }, 0);
+        vec.assign(5, Vec2 { x: 1, y: 1 }); // 5
+        if let Some(value) = vec.access(Vec2 { x: 1, y: 1 }) {
             println!("Value: {}", value);
         } else {
             println!("No value at this index");
