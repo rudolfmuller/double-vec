@@ -1,8 +1,10 @@
+/// The `Position` is a structure composed of variables of type `usize` named `x` and `y`
 #[derive(Debug, Default, Clone)]
 pub struct Index {
     pub x: usize,
     pub y: usize,
 }
+/// The `Size` is a structure composed of variables of type `usize` named `w` and `h`
 #[derive(Debug, Default, Clone)]
 pub struct Size {
     pub w: usize,
@@ -11,61 +13,59 @@ pub struct Size {
 
 #[derive(Debug, Default, Clone)]
 pub struct DubleVec<T> {
+    /// 2D size of `Size`
     pub scale: Size,
     vector: Vec<T>,
 }
 
 impl<T: Default + Clone> DubleVec<T> {
+    /// Creates a new `DubleVec`
     pub fn new(scale: Size) -> Self {
         let vector = vec![T::default(); scale.w * scale.h];
         Self { scale, vector }
     }
 
-    pub fn map(&self, index: Index) -> usize {
+    fn map(&self, index: Index) -> usize {
         index.y * self.scale.w + index.x
     }
-
+    /// Push new item`T` on `index`
     pub fn push(&mut self, item: T, index: Index) {
         let idx = self.map(index);
         if idx < self.vector.len() {
             self.vector[idx] = item;
         }
     }
-
+    /// Remove item`T` on `index`
+    /// Set item`T` on `index` to default value
     pub fn remove(&mut self, index: Index) {
         let idx = self.map(index);
         if idx < self.vector.len() {
             self.vector[idx] = T::default();
         }
     }
-
-    pub fn set(&mut self, item: T, index: Index) {
-        let idx = self.map(index);
-        if idx < self.vector.len() {
-            self.vector[idx] = item;
-        }
-    }
-
+    /// Flip the vector
     pub fn reverse(&mut self) {
         self.vector.reverse();
     }
-
+    /// Get item`T` on `index` as `Option<&T>`
     pub fn get(&self, index: Index) -> Option<&T> {
         let idx = self.map(index);
         self.vector.get(idx)
     }
+    /// Get clone of raw vector`Vec<T>`
     pub fn get_vec(&self) -> Vec<T> {
         self.vector.clone()
     }
+    /// Get mutable item`T` on `index` as `Option<&mut T>`
     pub fn get_mut(&mut self, index: Index) -> Option<&mut T> {
         let idx = self.map(index);
         self.vector.get_mut(idx)
     }
-
+    /// Is vector empty?
     pub fn is_empty(&self) -> bool {
         self.vector.is_empty()
     }
-
+    /// Return size of `vector`
     pub fn size(&self) -> usize {
         self.vector.len()
     }
@@ -99,6 +99,7 @@ impl<'a, T> IntoIterator for &'a mut DubleVec<T> {
 }
 
 impl<T: std::fmt::Display> DubleVec<T> {
+    /// Print a formatted vector
     pub fn print(&self) {
         for y in 0..self.scale.h {
             for x in 0..self.scale.w {
@@ -125,8 +126,7 @@ mod tests {
             println!("No value at this index");
         }
 
-        println!("{}", vec.size());
+        println!("Size: {}", vec.size());
         vec.print();
     }
 }
-
