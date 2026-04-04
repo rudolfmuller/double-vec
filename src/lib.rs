@@ -47,7 +47,9 @@ impl<T: Default + Clone> DubleVec<T> {
         let idx = self.map(index);
         self.vector.get(idx)
     }
-
+    pub fn get_vec(&self) -> Vec<T> {
+        self.vector.clone()
+    }
     pub fn get_mut(&mut self, index: Index) -> Option<&mut T> {
         let idx = self.map(index);
         self.vector.get_mut(idx)
@@ -120,3 +122,4 @@ mod tests {
         vec.print();
     }
 }
+
