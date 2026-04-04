@@ -1,6 +1,13 @@
 [package]
 name = "duble-vec"
 version = "0.1.0"
+authors = ["Rudolf Müller rudolfmullercz@gmail.com"]
 edition = "2024"
+license = "MIT"
+description = "Rust library for optimizing 2D vectors "
+repository = "https://github.com/rudolfmuller/double-vec.git"
+readme = "README.md"
+keywords = ["bitmap", "vector", "memory", "rust"]
+categories = ["memory-management"]
 
 [dependencies]
