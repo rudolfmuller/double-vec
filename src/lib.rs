@@ -40,6 +40,12 @@ impl<T: Default + Clone + PartialEq> DubleVec<T> {
             }
         }
     }
+    /// Force push new item`T` on `index`
+    pub fn fush(&mut self, item: T, index: Index) {
+        if let Some(idx) = self.map(index) {
+            self.vector[idx] = item;
+        }
+    }
     /// Remove item`T` on `index`
     /// Set item`T` on `index` to default value
     pub fn remove(&mut self, index: Index) {
@@ -129,8 +135,8 @@ mod tests {
     #[test]
     fn it_works() {
         let mut vec: DubleVec<i32> = DubleVec::new(Size { w: 6, h: 5 });
-        vec.push(5, Index { x: 1, y: 1 });
-        vec.push(2, Index { x: 1, y: 1 });
+        vec.push(5, Index { x: 1, y: 1 }); // 5
+        vec.fush(2, Index { x: 1, y: 1 }); // 2
         if let Some(value) = vec.get(Index { x: 1, y: 1 }) {
             println!("Value: {}", value);
         } else {
