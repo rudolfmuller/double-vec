@@ -1,6 +1,6 @@
 [package]
 name = "duble-vec"
-version = "0.2.0"
+version = "1.0.0"
 authors = ["Rudolf Müller <rudolfmullercz@gmail.com>"]
 edition = "2024"
 license = "MIT"

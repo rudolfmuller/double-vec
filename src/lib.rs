@@ -1,4 +1,4 @@
-/// The `Position` is a structure composed of variables of type `usize` named `x` and `y`
+/// The `Index` is a structure composed of variables of type `usize` named `x` and `y`
 #[derive(Debug, Default, Clone)]
 pub struct Index {
     pub x: usize,
@@ -10,72 +10,50 @@ pub struct Size {
     pub w: usize,
     pub h: usize,
 }
-
+/// Fixed 2D vector
 #[derive(Debug, Default, Clone)]
 pub struct DubleVec<T> {
-    /// 2D size of `Size`
-    pub scale: Size,
+    scale: Size,
     vector: Vec<T>,
 }
-
-impl<T: Default + Clone + PartialEq> DubleVec<T> {
+impl<T: Clone + PartialEq> DubleVec<T> {
     /// Creates a new `DubleVec`
-    pub fn new(scale: Size) -> Self {
-        let vector = vec![T::default(); scale.w * scale.h];
+    pub fn new(scale: Size, fill: T) -> Self {
+        let vector = vec![fill.clone(); scale.w * scale.h];
         Self { scale, vector }
     }
-
-    fn map(&self, index: Index) -> Option<usize> {
+    /// Get clone of raw vector`Vec<T>`
+    pub fn access_vec(&self) -> Vec<T> {
+        self.vector.clone()
+    }
+    pub fn as_slice(&self) -> &[T] {
+        &self.vector
+    }
+    /// Get mutable item`T` on `index` as `Option<&mut T>`
+    pub fn access_mut(&mut self, index: Index) -> Option<&mut T> {
         if index.x < self.scale.w && index.y < self.scale.h {
-            Some(index.y * self.scale.w + index.x)
+            Some(&mut self.vector[index.y * self.scale.w + index.x])
         } else {
             None
         }
     }
-    /// Push new item`T` on `index`
-    pub fn push(&mut self, item: T, index: Index) {
-        if let Some(idx) = self.map(index) {
-            if self.vector[idx] == T::default() {
-                self.vector[idx] = item;
-            }
+    /// Get item`T` on `index` as `Option<&T>`
+    pub fn access(&self, index: Index) -> Option<&T> {
+        if index.x < self.scale.w && index.y < self.scale.h {
+            Some(&self.vector[index.y * self.scale.w + index.x])
+        } else {
+            None
         }
     }
-    /// Force push new item`T` on `index`
-    pub fn fush(&mut self, item: T, index: Index) {
-        if let Some(idx) = self.map(index) {
-            self.vector[idx] = item;
-        }
-    }
-    /// Remove item`T` on `index`
-    /// Set item`T` on `index` to default value
-    pub fn remove(&mut self, index: Index) {
-        if let Some(idx) = self.map(index) {
-            self.vector[idx] = T::default();
+    /// Set item`T` on `index`
+    pub fn assign(&mut self, item: T, index: Index) {
+        if let Some(idx) = self.access_mut(index) {
+            *idx = item;
         }
     }
     /// Flip the vector
     pub fn reverse(&mut self) {
         self.vector.reverse();
-    }
-    /// Get item`T` on `index` as `Option<&T>`
-    pub fn get(&self, index: Index) -> Option<&T> {
-        if let Some(idx) = self.map(index) {
-            self.vector.get(idx)
-        } else {
-            None
-        }
-    }
-    /// Get clone of raw vector`Vec<T>`
-    pub fn get_vec(&self) -> Vec<T> {
-        self.vector.clone()
-    }
-    /// Get mutable item`T` on `index` as `Option<&mut T>`
-    pub fn get_mut(&mut self, index: Index) -> Option<&mut T> {
-        if let Some(idx) = self.map(index) {
-            self.vector.get_mut(idx)
-        } else {
-            None
-        }
     }
     /// Is vector empty?
     pub fn is_empty(&self) -> bool {
@@ -134,11 +112,9 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let mut vec: DubleVec<i32> = DubleVec::new(Size { w: 6, h: 5 });
-        vec.push(5, Index { x: 1, y: 1 }); // 5
-        vec.fush(2, Index { x: 1, y: 1 }); // 2
-        vec.push(4, Index { x: 1, y: 1 }); // 2
-        if let Some(value) = vec.get(Index { x: 1, y: 1 }) {
+        let mut vec: DubleVec<i32> = DubleVec::new(Size { w: 6, h: 5 }, 0);
+        vec.assign(5, Index { x: 1, y: 1 }); // 5
+        if let Some(value) = vec.access(Index { x: 1, y: 1 }) {
             println!("Value: {}", value);
         } else {
             println!("No value at this index");
