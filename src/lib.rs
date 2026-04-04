@@ -121,7 +121,7 @@ impl<T: std::fmt::Display> DubleVec<T> {
             for x in 0..self.scale.w {
                 let index = Index { y, x };
                 let idx = index.y * self.scale.w + index.x;
-                print!("{} ", self.vector[idx]);
+                print!("{}", self.vector[idx]);
             }
             println!();
         }
@@ -137,6 +137,7 @@ mod tests {
         let mut vec: DubleVec<i32> = DubleVec::new(Size { w: 6, h: 5 });
         vec.push(5, Index { x: 1, y: 1 }); // 5
         vec.fush(2, Index { x: 1, y: 1 }); // 2
+        vec.push(4, Index { x: 1, y: 1 }); // 2
         if let Some(value) = vec.get(Index { x: 1, y: 1 }) {
             println!("Value: {}", value);
         } else {
