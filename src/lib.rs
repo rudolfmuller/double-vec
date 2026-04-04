@@ -18,28 +18,30 @@ pub struct DubleVec<T> {
     vector: Vec<T>,
 }
 
-impl<T: Default + Clone> DubleVec<T> {
+impl<T: Default + Clone + PartialEq> DubleVec<T> {
     /// Creates a new `DubleVec`
     pub fn new(scale: Size) -> Self {
         let vector = vec![T::default(); scale.w * scale.h];
         Self { scale, vector }
     }
 
-    fn map(&self, index: Index) -> usize {
-        index.y * self.scale.w + index.x
+    fn map(&self, index: Index) -> Option<usize> {
+        if index.x < self.scale.w && index.y < self.scale.h {
+            Some(index.y * self.scale.w + index.x)
+        } else {
+            None
+        }
     }
     /// Push new item`T` on `index`
     pub fn push(&mut self, item: T, index: Index) {
-        let idx = self.map(index);
-        if idx < self.vector.len() {
+        if let Some(idx) = self.map(index) {
             self.vector[idx] = item;
         }
     }
     /// Remove item`T` on `index`
     /// Set item`T` on `index` to default value
     pub fn remove(&mut self, index: Index) {
-        let idx = self.map(index);
-        if idx < self.vector.len() {
+        if let Some(idx) = self.map(index) {
             self.vector[idx] = T::default();
         }
     }
@@ -49,8 +51,11 @@ impl<T: Default + Clone> DubleVec<T> {
     }
     /// Get item`T` on `index` as `Option<&T>`
     pub fn get(&self, index: Index) -> Option<&T> {
-        let idx = self.map(index);
-        self.vector.get(idx)
+        if let Some(idx) = self.map(index) {
+            self.vector.get(idx)
+        } else {
+            None
+        }
     }
     /// Get clone of raw vector`Vec<T>`
     pub fn get_vec(&self) -> Vec<T> {
@@ -58,8 +63,11 @@ impl<T: Default + Clone> DubleVec<T> {
     }
     /// Get mutable item`T` on `index` as `Option<&mut T>`
     pub fn get_mut(&mut self, index: Index) -> Option<&mut T> {
-        let idx = self.map(index);
-        self.vector.get_mut(idx)
+        if let Some(idx) = self.map(index) {
+            self.vector.get_mut(idx)
+        } else {
+            None
+        }
     }
     /// Is vector empty?
     pub fn is_empty(&self) -> bool {
