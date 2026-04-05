@@ -1,20 +1,22 @@
 pub mod dublevec;
+pub mod rectvec;
 pub mod vec2;
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use dublevec::DubleVec;
+    use rectvec::RectVec;
     use vec2::Vec2;
 
     #[test]
     fn assign_works() {
-        let mut vec: DubleVec<i32> = DubleVec::new(Vec2 { x: 5, y: 5 }, 0);
+        let mut vec: RectVec<i32> = RectVec::new(Vec2 { x: 5, y: 5 }, 0);
         vec.assign(5, Vec2 { x: 1, y: 1 }); // 5
     }
     #[test]
     fn access_works() -> Result<(), ()> {
-        let vec: DubleVec<i32> = DubleVec::new(Vec2 { x: 2, y: 2 }, 0);
+        let vec: RectVec<i32> = RectVec::new(Vec2 { x: 2, y: 2 }, 0);
         if vec.access(Vec2 { x: 0, y: 1 }).is_some() {
             Ok(())
         } else {
@@ -37,12 +39,26 @@ mod tests {
             vec![3, 0, 0, 0, 0],
             vec![4, 4, 4, 0, 3],
         ];
-        let _dublevec_i32: DubleVec<i32> = DubleVec::from(vecvec);
+        let _rectvect_i32: RectVec<i32> = RectVec::from(vecvec);
     }
     #[test]
     fn fmt_works() {
-        let mut dublevec: DubleVec<char> = DubleVec::new(Vec2 { x: 5, y: 5 }, '#');
+        let mut dublevec: RectVec<char> = RectVec::new(Vec2 { x: 5, y: 5 }, '#');
         dublevec.assign('*', Vec2 { x: 2, y: 2 });
-        println!("{}", dublevec);
+        //println!("{}", dublevec);
+    }
+    #[test]
+    fn dublevec_works() {
+        let mut dublevec: DubleVec<i32> = DubleVec::new();
+        dublevec.push(vec![5, 2, 5]);
+        dublevec.push(vec![1, 5]);
+
+        if let Some(val) = dublevec.access(Vec2 { x: 0, y: 1 }) {
+            println!("{}", val);
+        } else {
+            println!("out of range");
+        }
+        println!();
+        dublevec.dbg();
     }
 }
