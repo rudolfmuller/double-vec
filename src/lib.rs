@@ -1,121 +1,31 @@
-/// Struct 'Vec2' of fields `usize`s
-#[derive(Debug, Default, Clone)]
-pub struct Vec2 {
-    pub x: usize,
-    pub y: usize,
-}
-
-/// Fixed 2D vector
-#[derive(Debug, Default, Clone)]
-pub struct DubleVec<T> {
-    scale: Vec2,
-    vector: Vec<T>,
-}
-impl<T: Clone + PartialEq> DubleVec<T> {
-    /// Creates a new `DubleVec`
-    pub fn new(scale: Vec2, fill: T) -> Self {
-        let vector = vec![fill.clone(); scale.x * scale.y];
-        Self { scale, vector }
-    }
-    /// Get clone of raw vector`Vec<T>`
-    pub fn access_vec(&self) -> Vec<T> {
-        self.vector.clone()
-    }
-    pub fn as_slice(&self) -> &[T] {
-        &self.vector
-    }
-    /// Get mutable item`T` on `index` as `Option<&mut T>`
-    pub fn access_mut(&mut self, index: Vec2) -> Option<&mut T> {
-        if index.x < self.scale.x && index.y < self.scale.y {
-            Some(&mut self.vector[index.y * self.scale.x + index.x])
-        } else {
-            None
-        }
-    }
-    /// Get item`T` on `index` as `Option<&T>`
-    pub fn access(&self, index: Vec2) -> Option<&T> {
-        if index.x < self.scale.x && index.y < self.scale.y {
-            Some(&self.vector[index.y * self.scale.x + index.x])
-        } else {
-            None
-        }
-    }
-    /// Set item`T` on `index`
-    pub fn assign(&mut self, item: T, index: Vec2) {
-        if let Some(idx) = self.access_mut(index) {
-            *idx = item;
-        }
-    }
-    /// Flip the vector
-    pub fn reverse(&mut self) {
-        self.vector.reverse();
-    }
-    /// Is vector empty?
-    pub fn is_empty(&self) -> bool {
-        self.vector.is_empty()
-    }
-    /// Return size of `vector`
-    pub fn size(&self) -> usize {
-        self.vector.len()
-    }
-}
-
-impl<T> IntoIterator for DubleVec<T> {
-    type Item = T;
-    type IntoIter = std::vec::IntoIter<T>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.vector.into_iter()
-    }
-}
-
-impl<'a, T> IntoIterator for &'a DubleVec<T> {
-    type Item = &'a T;
-    type IntoIter = std::slice::Iter<'a, T>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.vector.iter()
-    }
-}
-
-impl<'a, T> IntoIterator for &'a mut DubleVec<T> {
-    type Item = &'a mut T;
-    type IntoIter = std::slice::IterMut<'a, T>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.vector.iter_mut()
-    }
-}
-
-impl<T: std::fmt::Display> DubleVec<T> {
-    /// Print a formatted vector
-    pub fn print(&self) {
-        for y in 0..self.scale.y {
-            for x in 0..self.scale.x {
-                let index = Vec2 { y, x };
-                let idx = index.y * self.scale.x + index.x;
-                print!("{}", self.vector[idx]);
-            }
-            println!();
-        }
-    }
-}
+pub mod dublevec;
+pub mod vec2;
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use dublevec::DubleVec;
+    use vec2::Vec2;
 
     #[test]
-    fn it_works() {
-        let mut vec: DubleVec<i32> = DubleVec::new(Vec2 { x: 6, y: 5 }, 0);
+    fn assign_works() {
+        let mut vec: DubleVec<i32> = DubleVec::new(Vec2 { x: 5, y: 5 }, 0);
         vec.assign(5, Vec2 { x: 1, y: 1 }); // 5
-        if let Some(value) = vec.access(Vec2 { x: 1, y: 1 }) {
-            println!("Value: {}", value);
+    }
+    #[test]
+    fn access_works() -> Result<(), ()> {
+        let vec: DubleVec<i32> = DubleVec::new(Vec2 { x: 2, y: 2 }, 0);
+        if vec.access(Vec2 { x: 0, y: 1 }).is_some() {
+            Ok(())
         } else {
-            println!("No value at this index");
+            Err(())
         }
-
-        println!("Size: {}", vec.size());
-        vec.print();
+    }
+    #[test]
+    fn vec2_works() {
+        assert_eq!(
+            Vec2 { x: 5, y: 5 } * Vec2 { x: 2, y: 2 },
+            Vec2 { x: 10, y: 10 }
+        );
     }
 }
