@@ -1,4 +1,5 @@
 use crate::vec2::Vec2;
+use std::fmt;
 
 /// Fixed 2D vector
 #[derive(Debug, Default, Clone)]
@@ -97,16 +98,16 @@ impl<'a, T> IntoIterator for &'a mut DubleVec<T> {
     }
 }
 
-impl<T: std::fmt::Display> DubleVec<T> {
+impl<T: fmt::Display> fmt::Display for DubleVec<T> {
     /// Print a formatted vector
-    pub fn print(&self) {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for y in 0..self.scale.y {
             for x in 0..self.scale.x {
-                let index = Vec2 { y, x };
-                let idx = index.y * self.scale.x + index.x;
-                print!("{}", self.vector[idx]);
+                let idx = y * self.scale.x + x;
+                write!(f, "{}, ", self.vector[idx])?;
             }
-            println!();
+            writeln!(f)?;
         }
+        Ok(())
     }
 }

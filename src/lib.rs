@@ -39,4 +39,10 @@ mod tests {
         ];
         let _dublevec_i32: DubleVec<i32> = DubleVec::from(vecvec);
     }
+    #[test]
+    fn fmt_works() {
+        let mut dublevec: DubleVec<char> = DubleVec::new(Vec2 { x: 5, y: 5 }, '#');
+        dublevec.assign('*', Vec2 { x: 2, y: 2 });
+        println!("{}", dublevec);
+    }
 }
