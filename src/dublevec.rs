@@ -54,6 +54,21 @@ impl<T: Clone + PartialEq> DubleVec<T> {
         self.vector.len()
     }
 }
+impl<T> From<Vec<Vec<T>>> for DubleVec<T> {
+    /// Converts `Vec<Vec<T>>` to `DubleVec<T>`
+
+    /// MUST BE A RECTANGULAR TYPE!!!
+    fn from(other: Vec<Vec<T>>) -> Self {
+        let h = other.len();
+        let w = other.first().map(|row| row.len()).unwrap_or(0);
+
+        let vector = other.into_iter().flatten().collect();
+
+        let scale = Vec2 { x: w, y: h };
+
+        Self { scale, vector }
+    }
+}
 
 impl<T> IntoIterator for DubleVec<T> {
     type Item = T;

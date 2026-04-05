@@ -28,4 +28,15 @@ mod tests {
             Vec2 { x: 10, y: 10 }
         );
     }
+    #[test]
+    fn from_works() {
+        let vecvec: Vec<Vec<i32>> = vec![
+            vec![5, 0, 2, 0, 0],
+            vec![1, 2, 0, 0, 0],
+            vec![7, 8, 9, 1, 0],
+            vec![3, 0, 0, 0, 0],
+            vec![4, 4, 4, 0, 3],
+        ];
+        let _dublevec_i32: DubleVec<i32> = DubleVec::from(vecvec);
+    }
 }
