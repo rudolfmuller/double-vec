@@ -48,17 +48,15 @@ mod tests {
         //println!("{}", dublevec);
     }
     #[test]
-    fn dublevec_works() {
+    fn dublevec_works() -> Result<(), ()> {
         let mut dublevec: DubleVec<i32> = DubleVec::new();
         dublevec.push(vec![5, 2, 5]);
         dublevec.push(vec![1, 5]);
 
-        if let Some(val) = dublevec.access(Vec2 { x: 0, y: 1 }) {
-            println!("{}", val);
+        if dublevec.access(Vec2 { x: 0, y: 1 }).is_some() {
+            Ok(())
         } else {
-            println!("out of range");
+            Err(())
         }
-        println!();
-        dublevec.dbg();
     }
 }

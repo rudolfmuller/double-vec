@@ -37,6 +37,20 @@ impl<T: Clone + PartialEq + Display> DubleVec<T> {
         self.count.push(v.len());
         self.vector.clone()
     }
+    pub fn remove(&mut self, index: Vec2) -> Option<Vec<T>> {
+        if let Some(idx) = self.offset(index.clone()) {
+            self.vector.remove(idx);
+            if let Some(row_len) = self.count.get_mut(index.y) {
+                *row_len -= 1;
+                if *row_len == 0 {
+                    self.count.remove(index.y);
+                }
+            }
+            Some(self.vector.clone())
+        } else {
+            None
+        }
+    }
     pub fn access(&self, index: Vec2) -> Option<&T> {
         if let Some(ofst) = self.offset(index) {
             Some(&self.vector[ofst])
