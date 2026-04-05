@@ -17,14 +17,14 @@ documentation on: https://docs.rs/duble-vec/
 use duble_vec::*;
 
 fn main() {
-    let mut vec: DubleVec<i32> = DubleVec::new(Size { w: 6, h: 5 });
-    vec.push(5, Index { x: 1, y: 1 });
-    if let Some(value) = vec.get(Index { x: 1, y: 1 }) {
+    let mut vec: DubleVec<i32> = DubleVec::new(Vec2 { x: 6, y: 5 }, 0);
+    vec.assign(5, Vec2 { x: 1, y: 1 });
+    if let Some(value) = vec.access(Index { x: 1, y: 1 }) {
         println!("Value: {}", value);
     } else {
         println!("No value at this index");
     }
     println!("Size: {}", vec.size());
-    vec.print();
+    println!("{}", vec;);
 }
 ```
