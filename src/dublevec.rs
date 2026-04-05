@@ -12,11 +12,22 @@ pub struct DubleVec<T> {
 impl<T: Clone + PartialEq + Display> DubleVec<T> {
     /// Creates a new `DubleVec`
     pub fn new() -> Self {
-        let vector: Vec<T> = Vec::new();
         Self {
-            vector,
+            vector: vec![],
             count: vec![],
         }
+    }
+    fn offset(&self, index: Vec2) -> Option<usize> {
+        if index.y >= self.count.len() {
+            return None;
+        }
+
+        let row_len = self.count[index.y];
+        if index.x >= row_len {
+            return None;
+        }
+
+        Some(self.count.iter().take(index.y).sum::<usize>() + index.x)
     }
     pub fn as_slice(&self) -> &[T] {
         &self.vector
@@ -27,30 +38,18 @@ impl<T: Clone + PartialEq + Display> DubleVec<T> {
         self.vector.clone()
     }
     pub fn access(&self, index: Vec2) -> Option<&T> {
-        if index.y >= self.count.len() {
-            return None;
+        if let Some(ofst) = self.offset(index) {
+            Some(&self.vector[ofst])
+        } else {
+            None
         }
-
-        let row_len = self.count[index.y];
-        if index.x >= row_len {
-            return None;
-        }
-
-        let offset: usize = self.count.iter().take(index.y).sum();
-        Some(&self.vector[offset + index.x])
     }
-    pub fn access_mut(&mut self, index: Vec2) -> Option<&mut T> {
-        if index.y >= self.count.len() {
-            return None;
+    pub fn access_mut(&mut self, index: Vec2) -> Option<&T> {
+        if let Some(ofst) = self.offset(index) {
+            Some(&mut self.vector[ofst])
+        } else {
+            None
         }
-
-        let row_len = self.count[index.y];
-        if index.x >= row_len {
-            return None;
-        }
-
-        let offset: usize = self.count.iter().take(index.y).sum();
-        Some(&mut self.vector[offset + index.x])
     }
 
     /// Flip the vector
