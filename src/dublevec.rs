@@ -21,9 +21,10 @@ impl<T: Clone + PartialEq + Display> DubleVec<T> {
     pub fn as_slice(&self) -> &[T] {
         &self.vector
     }
-    pub fn push(&mut self, v: Vec<T>) {
+    pub fn push(&mut self, v: Vec<T>) -> Vec<T> {
         self.vector.extend(v.clone());
         self.count.push(v.len());
+        self.vector.clone()
     }
     pub fn access(&self, index: Vec2) -> Option<&T> {
         if index.y >= self.count.len() {
