@@ -37,6 +37,7 @@ impl<T: Clone + PartialEq + Display> DubleVec<T> {
         self.count.push(v.len());
         self.vector.clone()
     }
+
     pub fn remove(&mut self, index: Vec2) -> Option<Vec<T>> {
         if let Some(idx) = self.offset(index.clone()) {
             self.vector.remove(idx);
@@ -50,6 +51,23 @@ impl<T: Clone + PartialEq + Display> DubleVec<T> {
         } else {
             None
         }
+    }
+
+    pub fn pop_last(&mut self) -> Option<Vec<T>> {
+        self.vector.pop();
+        if let Some(v) = self.count.last_mut() {
+            if *v == 0 {
+                return None;
+            } else {
+                *v -= 1;
+            }
+        }
+        Some(self.vector.clone())
+    }
+    pub fn pop_vec(&mut self) -> Option<Vec<T>> {
+        self.vector.pop();
+        self.count.pop();
+        Some(self.vector.clone())
     }
     pub fn access(&self, index: Vec2) -> Option<&T> {
         if let Some(ofst) = self.offset(index) {
@@ -80,8 +98,6 @@ impl<T: Clone + PartialEq + Display> DubleVec<T> {
     }
 
     pub fn dbg(&self) {
-        for c in self.vector.clone() {
-            println!("{}", c);
-        }
+        println!("----{:?}", self.count);
     }
 }

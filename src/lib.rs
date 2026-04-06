@@ -10,12 +10,12 @@ mod tests {
     use vec2::Vec2;
 
     #[test]
-    fn assign_works() {
+    fn rectvec_assign_works() {
         let mut vec: RectVec<i32> = RectVec::new(Vec2 { x: 5, y: 5 }, 0);
         vec.assign(5, Vec2 { x: 1, y: 1 }); // 5
     }
     #[test]
-    fn access_works() -> Result<(), ()> {
+    fn rectvec_access_works() -> Result<(), ()> {
         let vec: RectVec<i32> = RectVec::new(Vec2 { x: 2, y: 2 }, 0);
         if vec.access(Vec2 { x: 0, y: 1 }).is_some() {
             Ok(())
@@ -48,15 +48,50 @@ mod tests {
         //println!("{}", dublevec);
     }
     #[test]
-    fn dublevec_works() -> Result<(), ()> {
+    fn dublevec_push_works() {
+        let mut dublevec: DubleVec<i32> = DubleVec::new();
+        dublevec.push(vec![5, 2, 5]);
+        dublevec.push(vec![1, 5]);
+    }
+    #[test]
+    fn dublevec_remove_works() {
+        let mut dublevec: DubleVec<i32> = DubleVec::new();
+        dublevec.push(vec![5, 2, 5]);
+        dublevec.push(vec![1, 5]);
+        if let Some(v) = dublevec.remove(Vec2 { x: 0, y: 1 }) {
+            dbg!(v);
+        } else {
+            dbg!("out of range");
+        }
+    }
+
+    #[test]
+    fn dublevec_pops_works() {
+        let mut dublevec: DubleVec<i32> = DubleVec::new();
+        dublevec.push(vec![5, 2, 5]);
+        dublevec.push(vec![1, 5, 3]);
+        if let Some(v) = dublevec.pop_last() {
+            dbg!(v);
+        } else {
+            dbg!("out of range");
+        }
+        if let Some(v) = dublevec.pop_vec() {
+            dbg!(v);
+        } else {
+            dbg!("out of range");
+        }
+    }
+
+    #[test]
+    fn dublevec_access_works() {
         let mut dublevec: DubleVec<i32> = DubleVec::new();
         dublevec.push(vec![5, 2, 5]);
         dublevec.push(vec![1, 5]);
 
-        if dublevec.access(Vec2 { x: 0, y: 1 }).is_some() {
-            Ok(())
+        if let Some(v) = dublevec.access(Vec2 { x: 1, y: 0 }) {
+            dbg!(v);
         } else {
-            Err(())
+            dbg!("out of range");
         }
     }
 }
