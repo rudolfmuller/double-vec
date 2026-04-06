@@ -96,8 +96,21 @@ impl<T: Clone + PartialEq + Display> DubleVec<T> {
     pub fn size(&self) -> usize {
         self.vector.len()
     }
+}
 
-    pub fn dbg(&self) {
-        println!("----{:?}", self.count);
+impl<T: fmt::Display> fmt::Display for DubleVec<T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut start = 0;
+        for &row_len in &self.count {
+            for i in 0..row_len {
+                write!(f, "{}", self.vector[start + i])?;
+                if i != row_len - 1 {
+                    write!(f, ", ")?;
+                }
+            }
+            writeln!(f)?;
+            start += row_len;
+        }
+        Ok(())
     }
 }
