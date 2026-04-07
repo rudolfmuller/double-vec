@@ -59,6 +59,15 @@ impl<T> DubleVec<T> {
 
         Some(val)
     }
+
+    pub fn push_single(&mut self, i: T) {
+        self.vector.push(i);
+
+        if let Some(last) = self.count.last_mut() {
+            *last += 1;
+        }
+    }
+
     pub fn pop_vec(&mut self) -> Option<Vec<T>> {
         let len = self.count.pop()?;
 

@@ -48,10 +48,11 @@ mod tests {
         //println!("{}", dublevec);
     }
     #[test]
-    fn dublevec_push_works() {
+    fn dublevec_pushs_works() {
         let mut dublevec: DubleVec<i32> = DubleVec::new();
         dublevec.push(vec![5, 2, 5]);
         dublevec.push(vec![1, 5]);
+        dublevec.push_single(4);
         dbg!("{}", &dublevec);
     }
     #[test]
