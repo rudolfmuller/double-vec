@@ -7,6 +7,7 @@ use std::fmt;
 pub struct DubleVec<T> {
     vector: Vec<T>,
     count: Vec<usize>,
+    prefix_sum: Vec<usize>,
 }
 impl<T> DubleVec<T> {
     /// Creates a new `DubleVec`
@@ -14,30 +15,22 @@ impl<T> DubleVec<T> {
         Self {
             vector: Vec::new(),
             count: Vec::new(),
+            prefix_sum: Vec::new(),
         }
-    }
-    fn offset(&self, index: Vec2) -> Option<usize> {
-        if index.y >= self.count.len() {
-            return None;
-        }
-
-        let row_len = self.count[index.y];
-        if index.x >= row_len {
-            return None;
-        }
-
-        Some(self.count.iter().take(index.y).sum::<usize>() + index.x)
     }
     pub fn as_slice(&self) -> &[T] {
         &self.vector
     }
     pub fn push(&mut self, v: Vec<T>) {
+        let last_prefix = self.prefix_sum.last().cloned().unwrap_or(0);
+        let new_prefix = last_prefix + self.count.last().cloned().unwrap_or(0);
+        self.prefix_sum.push(new_prefix);
         self.count.push(v.len());
         self.vector.extend(v);
     }
 
     pub fn remove(&mut self, index: Vec2) -> Option<T> {
-        let idx = self.offset(index.clone())?;
+        let idx = *self.prefix_sum.get(index.y)? + index.x;
         let val = self.vector.remove(idx);
         if let Some(row_len) = self.count.get_mut(index.y) {
             *row_len -= 1;
@@ -80,18 +73,23 @@ impl<T> DubleVec<T> {
         Some(out)
     }
     pub fn access(&self, index: Vec2) -> Option<&T> {
-        if let Some(ofst) = self.offset(index) {
-            Some(&self.vector[ofst])
-        } else {
-            None
+        let row_len = *self.count.get(index.y)?;
+        if index.x >= row_len {
+            return None;
         }
+
+        let idx = *self.prefix_sum.get(index.y)? + index.x;
+        self.vector.get(idx)
     }
+
     pub fn access_mut(&mut self, index: Vec2) -> Option<&mut T> {
-        if let Some(ofst) = self.offset(index) {
-            Some(&mut self.vector[ofst])
-        } else {
-            None
+        let row_len = *self.count.get(index.y)?;
+        if index.x >= row_len {
+            return None;
         }
+
+        let idx = *self.prefix_sum.get(index.y)? + index.x;
+        self.vector.get_mut(idx)
     }
 
     /// Flip the vector

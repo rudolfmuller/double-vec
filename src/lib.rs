@@ -88,13 +88,14 @@ mod tests {
     #[test]
     fn dublevec_access_works() {
         let mut dublevec: DubleVec<i32> = DubleVec::new();
-        dublevec.push(vec![5, 2, 5]);
+        dublevec.push(vec![3, 2, 4]);
         dublevec.push(vec![1, 5]);
 
-        if let Some(v) = dublevec.access(Vec2 { x: 1, y: 0 }) {
+        if let Some(v) = dublevec.access(Vec2 { x: 1, y: 1 }) {
             dbg!(v);
         } else {
             dbg!("out of range");
         }
+        dbg!(dublevec);
     }
 }
