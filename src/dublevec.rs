@@ -65,8 +65,13 @@ impl<T: Clone + PartialEq + Display> DubleVec<T> {
         Some(self.vector.clone())
     }
     pub fn pop_vec(&mut self) -> Option<Vec<T>> {
-        self.vector.pop();
+        if let Some(v) = self.count.last_mut() {
+            for _ in 0..*v {
+                self.vector.pop();
+            }
+        }
         self.count.pop();
+
         Some(self.vector.clone())
     }
     pub fn access(&self, index: Vec2) -> Option<&T> {

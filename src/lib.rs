@@ -59,7 +59,7 @@ mod tests {
         let mut dublevec: DubleVec<i32> = DubleVec::new();
         dublevec.push(vec![5, 2, 5]);
         dublevec.push(vec![1, 5]);
-        if let Some(v) = dublevec.remove(Vec2 { x: 0, y: 1 }) {
+        if dublevec.remove(Vec2 { x: 0, y: 1 }).is_some() {
             dbg!("{}", &dublevec);
         } else {
             dbg!("out of range");
@@ -71,13 +71,13 @@ mod tests {
         let mut dublevec: DubleVec<i32> = DubleVec::new();
         dublevec.push(vec![5, 2, 5]);
         dublevec.push(vec![1, 5, 3]);
-        if let Some(v) = dublevec.pop_last() {
+        if dublevec.pop_last().is_some() {
             dbg!("{}", &dublevec);
         } else {
             dbg!("out of range");
         }
 
-        if let Some(v) = dublevec.pop_vec() {
+        if dublevec.pop_vec().is_some() {
             dbg!("{}", &dublevec);
         } else {
             dbg!("out of range");
