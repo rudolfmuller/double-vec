@@ -3,7 +3,6 @@ use std::fmt;
 // 1, 2, 3, 4,
 // push([1,2,3])
 // 1, 2, 3, 4, 1, 2, 3
-/// Fixed 2D vector
 #[derive(Debug, Default, Clone)]
 pub struct DubleVec<T> {
     vector: Vec<T>,
